@@ -4,7 +4,7 @@ VALUES
     ('Clowning'),
     ('Sideshow');
 
-INSERT INTO positions (title, salary, department_id)
+INSERT INTO roles (title, salary, department_id)
 VALUES
     ('Lion Tamer', 5.00, 1),
     ('Seal Trainer', 4.50, 1),
