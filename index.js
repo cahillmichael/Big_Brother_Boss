@@ -7,32 +7,116 @@ db.connect(err => {
     loadMenu();
 });
 
-
-const loadMenu = function() {
-
+function loadMenu() {
     console.log(`---------Main Menu---------`)
-    
+
     inquirer.prompt({
         name: 'mainMenu', 
         type: 'list',
         message: 'Choose Wisely.', 
-        choices: [ 'View All Departments', 'View All Roles', 'View All Employees', 'Add a Department', 'Add A Role', 'Add An Employee', 'Update An Employee Role' ]
+        choices: [ 'View All Departments', 'View All Roles', 'View All Employees', 'Add A Department', 'Add A Role', 'Add An Employee', 'Update An Employee Role' ]
     })
     .then(response => {
           if(response.mainMenu === 'View All Departments'){
             console.log('View All Departments');
+            viewAllDept();
           } else if(response.mainMenu === 'View All Roles'){
-            console.log('View All Roles');
+            viewAllRole();
           } else if(response.mainMenu === 'View All Employees'){
             console.log('View All Employees');
-          } else if(response.mainMenu === 'Add a Department'){
-            console.log('Add a Department');
+          } else if(response.mainMenu === 'Add A Department'){
+            addDept();
           } else if(response.mainMenu === 'Add A Role'){
-            console.log('Add A Role');
+            addRole();
           } else if(response.mainMenu === 'Add An Employee'){
             console.log('Add An Employee');
           } else if(response.mainMenu === 'Update An Employee Role'){
             console.log('Update An Employee Role');
           }
     });
+};
+
+function viewAllDept() {
+    const query = `SELECT * FROM department`;
+
+    db.query(query, (err, res) => {
+        if (err) throw err; 
+        console.log(`---------Department Table---------`);
+        console.table(res);
+        loadMenu();
+    });
+};
+
+function viewAllRole() {
+    const query = `SELECT * FROM roles`;
+
+    db.query(query, (err, res) => {
+        if (err) throw err; 
+        console.log(`---------Roles Table---------`);
+        console.table(res);
+        loadMenu();
+    });
+};
+
+function viewAllEmp() {
+    const query = `SELECT * FROM employee`;
+
+    db.query(query, (err, res) => {
+        if (err) throw err; 
+        console.log(`---------Employees Table---------`);
+        console.table(res);
+        loadMenu();
+    });
+};
+
+function addDept() {
+    inquirer.prompt([
+        {
+            name: 'name', 
+            type: 'input', 
+            message: 'Department name:'
+        }
+    ]).then(newDept => {
+        db.query(`INSERT INTO department SET ?`,
+            {
+                name: newDept.name 
+            },
+            (err, res) => {
+            if (err) throw err;
+
+            loadMenu();
+            }
+        )})
+};
+
+function addRole() {
+    inquirer.prompt([
+        {
+            name: 'name', 
+            type: 'input', 
+            message: 'Role name:'
+        },
+        {
+            name: 'salary', 
+            type: 'input', 
+            message: 'Salary:'
+        },
+        {
+            name: 'dept', 
+            type: 'input', 
+            message: 'Department ID:'
+        },
+    ]).then(newRole => {
+        db.query(`INSERT INTO roles SET ?`,
+            {
+                title: newRole.name,
+                salary: newRole.salary,
+                department_id: newRole.dept
+            },
+            (err, res) => {
+            if (err) throw err;
+
+            loadMenu();
+            }
+        )})
 };
