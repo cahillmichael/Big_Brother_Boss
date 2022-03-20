@@ -23,13 +23,13 @@ function loadMenu() {
           } else if(response.mainMenu === 'View All Roles'){
             viewAllRole();
           } else if(response.mainMenu === 'View All Employees'){
-            console.log('View All Employees');
+            viewAllEmp();
           } else if(response.mainMenu === 'Add A Department'){
             addDept();
           } else if(response.mainMenu === 'Add A Role'){
             addRole();
           } else if(response.mainMenu === 'Add An Employee'){
-            console.log('Add An Employee');
+            addEmp();
           } else if(response.mainMenu === 'Update An Employee Role'){
             console.log('Update An Employee Role');
           }
@@ -112,6 +112,44 @@ function addRole() {
                 title: newRole.name,
                 salary: newRole.salary,
                 department_id: newRole.dept
+            },
+            (err, res) => {
+            if (err) throw err;
+
+            loadMenu();
+            }
+        )})
+};
+
+function addEmp() {
+    inquirer.prompt([
+        {
+            name: 'firstName', 
+            type: 'input', 
+            message: 'First name:'
+        },
+        {
+            name: 'lastName', 
+            type: 'input', 
+            message: 'Last name:'
+        },
+        {
+            name: 'role', 
+            type: 'input', 
+            message: 'Role ID:'
+        },
+        {
+            name: 'mgr', 
+            type: 'input', 
+            message: 'Manager ID:'
+        },
+    ]).then(newEmp => {
+        db.query(`INSERT INTO employee SET ?`,
+            {
+                first_name: newEmp.firstName,
+                last_name: newEmp.lastName,
+                role_id: newEmp.role,
+                manager_id: newEmp.mgr
             },
             (err, res) => {
             if (err) throw err;
