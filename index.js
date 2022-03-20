@@ -31,7 +31,7 @@ function loadMenu() {
           } else if(response.mainMenu === 'Add An Employee'){
             addEmp();
           } else if(response.mainMenu === 'Update An Employee Role'){
-            console.log('Update An Employee Role');
+            updateEmp();
           }
     });
 };
@@ -157,4 +157,28 @@ function addEmp() {
             loadMenu();
             }
         )})
+};
+
+function updateEmp() {
+    inquirer.prompt([
+        {
+            name: 'employeeId',
+            type: 'input',
+            message: 'Employee ID to update:',
+        },
+        {
+            name: 'newRole',
+            type: 'input',
+            message: 'New Role ID:',
+        }
+    ]).then(response => {
+
+    const query = `UPDATE employee SET role_id = ? WHERE id = ?`;
+    const params = [response.newRole, response.employeeId]
+
+    db.query(query, params, (err, res) => {
+        if (err) throw err;
+        loadMenu();
+        })
+    })
 };
